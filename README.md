@@ -1,5 +1,7 @@
 <div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=32&duration=2800&pause=2000&color=A855F7&center=true&vCenter=true&width=600&lines=Hi+there!+👋+I'm+Chandan+V+Sharma;Full+Stack+Developer+🚀;AI+Automation+Enthusiast+🤖;Building+Digital+Solutions+💡" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=32&duration=2800&pause=2000&color=A855F7&center=true&vCenter=true&width=600&lines=Hi+there!+👋" alt="Typing SVG Line 1" />
+  <br />
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=32&duration=2800&pause=2000&color=A855F7&center=true&vCenter=true&width=600&lines=I'm+Chandan+V+Sharma" alt="Typing SVG Line 2" />
 </div>
 
 <h3 align="center">🌟 Passionate Developer | E-Commerce Expert | AI Automation Enthusiast 🌟</h3>
