@@ -13,7 +13,7 @@
 
 ### 👨‍💻 About Me
 
-Hey! I'm **Chandan V Sharma**, a passionate **Full-Stack Web Developer** and **Student** exploring the exciting worlds of **E-Commerce Solutions**, **AI Automation**, and **Cloud-Native Technologies**. I love building scalable, modern applications that solve real-world problems.
+Hey! I'm **Chandan Sharma**, a passionate **Full-Stack Web Developer** and **Student** exploring the exciting worlds of **E-Commerce Solutions**, **AI Automation**, and **Cloud-Native Technologies**. I love building scalable, modern applications that solve real-world problems.
 
 - 🔭 Currently working on cutting-edge projects in **Web Development** & **Microservices**
 - 🌱 Exploring **Kubernetes**, **AI/ML**, and **Cloud Technologies**
