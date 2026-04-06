@@ -1,0 +1,87 @@
+Security Audit Report
+Target: Signup flow / CAPTCHA handling / Admin access controls
+Date: 2026-04-06
+
+Scope
+- Review request was based on a HAR file link: https://filebin.net/t3qgfo43brrwt243#
+- This environment could not access filebin.net (DNS/network fetch failure), so packet-level validation of the HAR content was not possible here.
+- Findings below are based on the behavior described in the issue ("isAdmin=true" manipulation and CAPTCHA bypass during signup).
+
+Executive Summary
+- The described behavior indicates critical Broken Access Control and Privilege Escalation risk.
+- If user-controlled request fields can set admin privileges, the application is critically vulnerable.
+- If CAPTCHA can be bypassed by tampering or omitted server validation, automated abuse is possible.
+
+Findings
+
+[CRITICAL] F1 - Privilege escalation via signup parameter tampering (isAdmin / role mass assignment)
+Description:
+- During signup, attacker-controlled fields (e.g., isAdmin=true / role=admin) appear to be accepted.
+- This suggests mass assignment / insecure direct object attribute mapping and missing server-side role enforcement.
+Impact:
+- Attackers can create privileged accounts.
+- Full administrative compromise is possible (data theft, account takeover, destructive changes).
+Evidence (from reported behavior):
+- "while signup try signup as admin"
+- "I interrupt traffic and did is admin true ... and it's works"
+Recommendations:
+1) Ignore all role/privilege fields from client input in signup/update APIs.
+2) Enforce role assignment strictly on server (default role = user).
+3) Use DTO allowlists for accepted fields and reject unknown/sensitive fields.
+4) Add server-side authorization checks for every admin action.
+5) Add audit logging + alerting for role changes and admin account creation.
+
+[HIGH] F2 - CAPTCHA bypass due to missing/weak server-side verification
+Description:
+- CAPTCHA appears bypassable during signup (as reported).
+- Common root cause: CAPTCHA checked only client-side or token accepted without backend verification.
+Impact:
+- Automated account creation, spam, credential stuffing support, and abuse at scale.
+Recommendations:
+1) Validate CAPTCHA token server-side against CAPTCHA provider API for every protected action.
+2) Bind token to action + short TTL + one-time use.
+3) Reject signup when CAPTCHA verification fails or is missing.
+4) Add rate limiting, IP/device fingerprinting, and abuse monitoring.
+
+[CRITICAL] F3 - Broken authorization on admin-accessible pages/endpoints
+Description:
+- If first HTML/admin page is accessible after request/response tampering, server-side authorization may be incomplete.
+- Frontend-only checks can be bypassed easily.
+Impact:
+- Unauthorized access to admin UI and potentially privileged APIs.
+Recommendations:
+1) Enforce authorization on backend routes, not just UI logic.
+2) Use centralized middleware/policy checks for role/permission verification.
+3) Return 403 for unauthorized users regardless of manipulated frontend state.
+4) Protect API endpoints even when hidden in UI.
+
+[MEDIUM] F4 - Trusting client-controlled state / response tampering assumptions
+Description:
+- Security decisions may rely on client-visible/modifiable values (e.g., flags in responses or local state).
+Impact:
+- Attackers can alter local state/traffic to unlock privileged screens or workflows.
+Recommendations:
+1) Treat client as untrusted; derive authorization from validated server session/JWT claims only.
+2) Sign and validate tokens properly (strong secret, short expiry, audience/issuer checks).
+3) Do not expose mutable privilege indicators that are later trusted by backend.
+
+Risk Rating
+- Overall risk: CRITICAL
+- Priority order: F1 (immediate), F3, F2, F4
+
+Immediate Remediation Plan (48-hour priority)
+1) Disable client-provided role/admin fields in signup APIs immediately.
+2) Hotfix backend authorization middleware on all /admin and privileged APIs.
+3) Enforce server-side CAPTCHA verification and reject missing/invalid tokens.
+4) Invalidate suspicious sessions/tokens and review newly created accounts for unauthorized admin roles.
+5) Add temporary WAF/rate-limits to reduce abuse during patch rollout.
+
+Validation Checklist (post-fix)
+- Attempt signup with isAdmin=true / role=admin => must remain normal user.
+- Attempt direct GET/POST to admin endpoints as normal user => must return 403.
+- Attempt signup with missing/invalid CAPTCHA token => must fail.
+- Attempt replay of CAPTCHA token => must fail.
+- Confirm logs/alerts capture blocked privilege escalation attempts.
+
+Note
+- Provide the HAR file directly in this repository (or as an attached file) to perform a traffic-accurate, endpoint-by-endpoint confirmation report with exact request/response evidence.
