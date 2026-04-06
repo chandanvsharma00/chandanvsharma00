@@ -3,7 +3,7 @@ Target: Signup flow / CAPTCHA handling / Admin access controls
 Date: 2026-04-06
 
 Scope
-- Review request was based on a HAR file link: https://filebin.net/t3qgfo43brrwt243#
+- Review request was based on an externally hosted HAR file link shared in the issue.
 - This environment could not access filebin.net (DNS/network fetch failure), so packet-level validation of the HAR content was not possible here.
 - Findings below are based on the behavior described in the issue ("isAdmin=true" manipulation and CAPTCHA bypass during signup).
 
